@@ -13,10 +13,6 @@ public class AsteroidSpawner : MonoBehaviour
 
     public float yOffsetToCamera;
 
-    
-
-
-
     void Start()
     {
         SpawAsteroids();

@@ -19,13 +19,9 @@ public class ButtonBoostController : EventTrigger
     public override void OnPointerDown(PointerEventData data)
     {
         HeroController.instance.boosting = true;
-        HeroController.instance.boostForce = 10f;
-        Debug.Log("Boosting Value" + HeroController.instance.boosting);
     }
     public override void OnPointerUp(PointerEventData data)
     {
         HeroController.instance.boosting = false;
-        HeroController.instance.boostForce = 5f;
-        Debug.Log("OnPointerClick called.");
     }
 }

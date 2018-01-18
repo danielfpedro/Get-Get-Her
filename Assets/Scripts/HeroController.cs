@@ -6,22 +6,22 @@ public class HeroController : MonoBehaviour {
 
     public static HeroController instance;
 
-    public float speed = 1f;
-    private float currentSpeed;
-    public float maxSpeed;
+    public float speed = 10f;
+    public float boostForce = 2;
+    public bool boosting;
+    [HideInInspector]
+    public float desiredSpeed;
 
     public float sideMoveDistance;
     public float sideMoveSmooth;
-    
-    public bool boosting = false;
-
-    public float boostForce;
 
     public int currentPosition;
     public bool maxSide;
 
     public float desiredXMove;
     public float goBoneco;
+
+    public Rigidbody2D rb;
 
     // [HideInInspector]
     public bool canMove = true;
@@ -36,25 +36,26 @@ public class HeroController : MonoBehaviour {
         {
             instance = this;
         }
+
     }
 
     // Use this for initialization
     void Start () {
         currentPosition = 0;
         maxSide = false;
+        boosting = false;
 
         desiredXMove = transform.position.x;
         goBoneco = 0;
+
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        currentSpeed = (boosting) ? (speed * boostForce) : speed;
-        currentSpeed = Mathf.Clamp(currentSpeed, 0f, maxSpeed);
-
-        transform.position += Vector3.up * (currentSpeed / 100);
-        
+        desiredSpeed = (boosting) ? (speed * boostForce) : speed;
+        transform.position += Vector3.up * (desiredSpeed * Time.deltaTime);
     }
 
     // 0 Left, 1 Right
@@ -116,10 +117,5 @@ public class HeroController : MonoBehaviour {
 
             GameController.instance.NewHit();
         }
-    }
-
-    public void SetBoosting()
-    {
-        boostForce = 15f;
     }
 }

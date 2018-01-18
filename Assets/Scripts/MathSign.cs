@@ -5,7 +5,6 @@ using UnityEngine;
 public class MathSign : MonoBehaviour {
 
     public int symbol;
-    public Sprite[] symbols;
 
 	// Use this for initialization
 	void Start () {
@@ -16,13 +15,4 @@ public class MathSign : MonoBehaviour {
 	void Update () {
 		
 	}
-
-    public void SetSymbol(int _symbol)
-    {
-        symbol = _symbol;
-        Transform symbolObject = transform.GetChild(0);
-        SpriteRenderer sr = symbolObject.GetComponent<SpriteRenderer>();
-        sr.sprite = symbols[symbol];
-        sr.sortingOrder = 1;
-    }
 }

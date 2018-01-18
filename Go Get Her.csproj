@@ -293,10 +293,14 @@
     <Compile Include="Assets\Scripts\EventManager.cs" />
     <Compile Include="Assets\Scripts\EventTriggerTest.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
+    <Compile Include="Assets\Scripts\Gameplay.cs" />
     <Compile Include="Assets\Scripts\HeroController.cs" />
     <Compile Include="Assets\Scripts\HeroInputController.cs" />
     <Compile Include="Assets\Scripts\MathSign.cs" />
+    <Compile Include="Assets\Scripts\PauseMenuController.cs" />
+    <Compile Include="Assets\Scripts\SceneController.cs" />
     <Compile Include="Assets\Scripts\TargetController.cs" />
+    <Compile Include="Assets\Scripts\TheObject.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

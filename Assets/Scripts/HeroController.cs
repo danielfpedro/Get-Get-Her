@@ -6,25 +6,23 @@ public class HeroController : MonoBehaviour {
 
     public static HeroController instance;
 
-    public float speed = 10f;
-    public float boostForce = 2;
+    [Header("Vertical Movement")]
+    public float speed;
+    public float boostSpeed;
     public bool boosting;
-    [HideInInspector]
-    public float desiredSpeed;
 
-    public float sideMoveDistance;
-    public float sideMoveSmooth;
-
-    public int currentPosition;
-    public bool maxSide;
-
-    public float desiredXMove;
-    public float goBoneco;
+    private float desiredSpeed;
 
     public Rigidbody2D rb;
-
-    // [HideInInspector]
+    [HideInInspector]
     public bool canMove = true;
+
+    [Header("Horizontal Position")]
+    public int currentPosition;
+    public float horizontalMoveDeslocation = 1.1f;
+    public int maxPosition = 2;
+    public int minPosition = -2;
+    public int lastMove;
 
     private void Awake()
     {
@@ -42,80 +40,34 @@ public class HeroController : MonoBehaviour {
     // Use this for initialization
     void Start () {
         currentPosition = 0;
-        maxSide = false;
         boosting = false;
-
-        desiredXMove = transform.position.x;
-        goBoneco = 0;
-
         rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        desiredSpeed = (boosting) ? (speed * boostForce) : speed;
+        MoveUp();
+    }
+
+    public void MoveUp()
+    {
+        desiredSpeed = (boosting) ? boostSpeed : speed;
         transform.position += Vector3.up * (desiredSpeed * Time.deltaTime);
     }
 
     // 0 Left, 1 Right
-    public void move(int side)
+    public void HorizontalMove(int side)
     {
-        if (!canMove)
+        if ((currentPosition <= minPosition || currentPosition >= maxPosition) && lastMove == side)
         {
             return;
         }
 
-        if (!maxSide || (currentPosition == 2 && side == 0) || (currentPosition == -2 && side == 1))
-        {
-            float xPosition = transform.position.x;
-            goBoneco = sideMoveDistance;
+        currentPosition += side;
+        float desiredDeslocation = horizontalMoveDeslocation * side;
+        transform.position = new Vector3(transform.position.x + desiredDeslocation, transform.position.y, transform.position.z);
 
-            if (side == 0)
-            {
-                goBoneco = -sideMoveDistance;
-            }
-
-            setCurrentPosition(side);
-            // transform.position = new Vector3(Mathf.Lerp(transform.position.x,  desiredXMove, sideMoveSmooth), transform.position.y, transform.position.z);
-
-            transform.position = new Vector3(transform.position.x + goBoneco, transform.position.y, transform.position.z);
-        }
-        
-    }
-
-    private void setCurrentPosition(int side)
-    {
-        if (side == 0)
-        {
-            currentPosition--;
-        } else
-        {
-            currentPosition++;
-        }
-
-        if (currentPosition >= 2)
-        {
-            currentPosition = 2;
-            maxSide = true;
-        } else if(currentPosition <= -2)
-        {
-            currentPosition = -2;
-            maxSide = true;
-        } else
-        {
-            maxSide = false;
-        }
-    }
-
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.tag == "MathSign")
-        {
-            EventManager.TriggerEvent("HitAsteroid");
-            Destroy(collision.transform.parent.gameObject);
-
-            GameController.instance.NewHit();
-        }
+        lastMove = side;
     }
 }

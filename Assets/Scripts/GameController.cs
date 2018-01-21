@@ -43,6 +43,7 @@ public class GameController : MonoBehaviour {
     void Start()
     {
         comboCount = 0;
+        Gameplay.instance.StartLevel(0);
         createAsteroids();
     }
 
@@ -113,23 +114,38 @@ public class GameController : MonoBehaviour {
         newAsteroids.transform.position = new Vector3(AsteroidSpawner.instance.transform.position.x, AsteroidSpawner.instance.transform.position.y, AsteroidSpawner.instance.transform.position.z);
 
         // TargetNumber
-        int heroNumber = Random.Range(0, 9);
-        int targetAsteroidSymbol = Random.Range(0, 2);
+        int heroNumber = Random.Range(Gameplay.instance.currentLevel.numbersStartRange, Gameplay.instance.currentLevel.numbersEndRange);
+        int targetAsteroidSymbol = Random.Range(Gameplay.instance.currentLevel.symbolsStartRange, Gameplay.instance.currentLevel.symolsEndRange);
         // If symbol is minus(index 1) the targetAsteroidNumber have to be at the same number than
         // hero number of greater
-        int max = (targetAsteroidSymbol == 1) ? heroNumber : 9;
-        int targetAsteroidNumber = Random.Range(0, max);
-
-        Debug.Log("Hero Number " + heroNumber);
-        Debug.Log("Target Asteroid " + targetAsteroidNumber);
-        Debug.Log("Symbol " + targetAsteroidSymbol);
+        int max = (targetAsteroidSymbol == 1) ? heroNumber + 1 : Gameplay.instance.currentLevel.numbersEndRange;
+        int targetAsteroidNumber = Random.Range(1, max);
 
         int resultNumber = getResultNumber(heroNumber, targetAsteroidNumber, targetAsteroidSymbol);
 
+        // Escolho aleatoriamente qual será o asteroid com a resposta certa... todo o resto será errada
+        int rightAnswearIndex = Random.Range(0, 5);
         float xOffset = -2.2f;
         for (int i = 0; i < 5; i++)
         {
-            createAsteroid(newAsteroids.transform, xOffset, targetAsteroidNumber, targetAsteroidSymbol);
+            int desiredAsteroidNumber = targetAsteroidNumber;
+            bool rightAnswear = true;
+            // IMPORTANTE: O min do range não pode ser 0 pois se for (x-0) vai dar o mesmo
+            // numero da resposta certo oq não pode acontecer de jeito nenhum
+            int wrongAsteroidNumbertDiff = Random.Range(1, 10);
+            if (i != rightAnswearIndex)
+            {
+                rightAnswear = false;
+                if (Random.Range(0, 1) == 0)
+                {
+                    desiredAsteroidNumber += wrongAsteroidNumbertDiff;
+                } else
+                {
+                    desiredAsteroidNumber -= wrongAsteroidNumbertDiff;
+                }
+                desiredAsteroidNumber = (targetAsteroidNumber <= 0) ? 0 : desiredAsteroidNumber;
+            }
+            createAsteroid(newAsteroids.transform, xOffset, desiredAsteroidNumber, targetAsteroidSymbol, rightAnswear);
             xOffset += 1.1f;
         }
 
@@ -137,6 +153,7 @@ public class GameController : MonoBehaviour {
 
         // Index é o numero desejado menos 1
         hero.GetComponent<TheObject>().SetNumber(heroNumber);
+        hero.GetComponent<TheObject>().SetSymbol(targetAsteroidSymbol);
         // Gambi depois arrumar
         target.GetComponent<TheObject>().SetNumber(resultNumber);
     }
@@ -166,15 +183,16 @@ public class GameController : MonoBehaviour {
         target.position = new Vector3(asteroids.transform.position.x, asteroids.transform.position.y + 1.1f, asteroids.transform.position.z);
     }
 
-    public void createAsteroid(Transform asteroids, float x, int numberIndex, int symbolIndex)
+    public void createAsteroid(Transform asteroids, float x, int numberIndex, int symbolIndex, bool rightAnswear)
     {
         GameObject ast = Instantiate(asteroid, asteroids.transform);
         ast.transform.position = new Vector3(x, asteroids.position.y, asteroids.position.z);
 
         TheObject astObjectComponent = ast.GetComponent<TheObject>();
+        ast.GetComponent<Asteroid>().rightAnswear = rightAnswear;
 
         astObjectComponent.SetNumber(numberIndex);
-        astObjectComponent.SetSymbol(symbolIndex);
+        // astObjectComponent.SetSymbol(symbolIndex);
     }
 
     public Sprite getNumber(int number)
@@ -204,6 +222,9 @@ public class GameController : MonoBehaviour {
     public int[] SeparateDigits(int digit) {
         string digitString = digit.ToString();
 
+        Debug.Log("DIGIT " + digit);
+        Debug.Log("DIGIT STRING LENGTH" + digitString.Length);
+
         int[] numbersArray = new int[2];
         if (digit < 10)
         {
@@ -211,11 +232,14 @@ public class GameController : MonoBehaviour {
             numbersArray[1] = digit;
         } else
         {
-            for (int i = 0; i < numbersArray.Length; i++)
+            for (int i = 0; i < digitString.Length; i++)
             {
-                numbersArray[i] = digitString[i];
+                Debug.Log("ADICIONANDO " + digitString[i] + " PARA ARRAY DE RETORNO");
+                numbersArray[i] = int.Parse(digitString[i].ToString());
             }
         }
+
+        Debug.Log("ARRAY DE RETORNO É: " + numbersArray.ToString());
 
         return numbersArray;
     }

@@ -9,7 +9,7 @@ public class Gameplay : MonoBehaviour {
 
     public Level[] levels;
     public int currentLevelIndex;
-    private Level currentLevel;
+    public  Level currentLevel;
     public int wavesCount;
 
     private UnityAction hitListener;
@@ -18,8 +18,7 @@ public class Gameplay : MonoBehaviour {
     void Start () {
         currentLevelIndex = 0;
         wavesCount = 0;
-        currentLevel = levels[currentLevelIndex];
-	}
+    }
 
     void Awake()
     {
@@ -45,6 +44,14 @@ public class Gameplay : MonoBehaviour {
         EventManager.StopListening("HitAsteroid", hitListener);
     }
 
+    public void StartLevel(int currentLevelIndex)
+    {
+        currentLevel = levels[currentLevelIndex];
+
+        HeroController.instance.speed = currentLevel.speed;
+        HeroController.instance.boostSpeed = currentLevel.boostSpeed;
+    }
+
     private void NextWave()
     {
         wavesCount++;
@@ -59,7 +66,7 @@ public class Gameplay : MonoBehaviour {
                 return;
             }
 
-            currentLevel = levels[currentLevelIndex];
+            StartLevel(currentLevelIndex);
 
             wavesCount = 0;
         }
@@ -74,5 +81,16 @@ public class Gameplay : MonoBehaviour {
 public class Level
 {
     public float speed;
+    public float boostSpeed;
     public float waves;
+
+    [Range(1,10)]
+    public int numbersStartRange;
+    [Range(1, 10)]
+    public int numbersEndRange;
+
+    [Range(0, 4)]
+    public int symbolsStartRange;
+    [Range(0, 4)]
+    public int symolsEndRange;
 }

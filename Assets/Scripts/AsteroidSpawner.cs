@@ -11,16 +11,16 @@ public class AsteroidSpawner : MonoBehaviour
 
     public GameObject Asteroids;
 
-    public float yOffsetToCamera;
+    // public float yOffsetToCamera;
 
     void Start()
     {
-        SpawAsteroids();
+        // SpawAsteroids();
     }
 
     private void Update()
     {
-        transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y + yOffsetToCamera, 0);
+        // transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y + yOffsetToCamera, 0);
     }
 
     void Awake()

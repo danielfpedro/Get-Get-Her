@@ -4,10 +4,11 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - MathSign
   - Asteroids
   - Target
   - Number
+  - MathSymbol
+  - Asteroid
   layers:
   - Default
   - TransparentFX

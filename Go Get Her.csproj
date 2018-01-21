@@ -285,6 +285,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Asteroid.cs" />
     <Compile Include="Assets\Scripts\AsteroidsController.cs" />
     <Compile Include="Assets\Scripts\AsteroidSpawner.cs" />
     <Compile Include="Assets\Scripts\BoundaryController.cs" />
@@ -295,12 +296,12 @@
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\Gameplay.cs" />
     <Compile Include="Assets\Scripts\HeroController.cs" />
-    <Compile Include="Assets\Scripts\HeroInputController.cs" />
     <Compile Include="Assets\Scripts\MathSign.cs" />
-    <Compile Include="Assets\Scripts\PauseMenuController.cs" />
+    <Compile Include="Assets\Scripts\MenuController.cs" />
     <Compile Include="Assets\Scripts\SceneController.cs" />
     <Compile Include="Assets\Scripts\TargetController.cs" />
     <Compile Include="Assets\Scripts\TheObject.cs" />
+    <Compile Include="Assets\SymbolController.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour {
     public float smooth = 0.1f;
-    public Transform target;
     public float yOffset;
 
     // Use this for initialization
@@ -14,6 +13,10 @@ public class CameraController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        transform.position = new Vector3(transform.position.x, Mathf.Lerp(transform.position.y, target.position.y - yOffset, smooth), transform.position.z);
+        if (GameController.instance.hero)
+        {
+            transform.position = new Vector3(transform.position.x, Mathf.Lerp(transform.position.y, GameController.instance.hero.transform.position.y - yOffset, smooth), transform.position.z);
+        }
+        
 	}
 }

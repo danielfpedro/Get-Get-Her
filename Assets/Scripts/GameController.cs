@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using GoogleMobileAds.Api;
 
 public class GameController : MonoBehaviour {
+
+    private BannerView bannerView;
 
     public static GameController instance;
 
@@ -17,6 +20,8 @@ public class GameController : MonoBehaviour {
     private float nextScore;
     public float currentScoreRate;
     public float boostingEffectOnScore = 2f;
+    public int startShields = 3;
+    public int currentShields;
 
     [Header("Math Symbols")]
     public Text combotext;
@@ -42,9 +47,13 @@ public class GameController : MonoBehaviour {
 
     void Start()
     {
+        MobileAds.Initialize("ca-app-pub-3940256099942544/6300978111");
+
         comboCount = 0;
         Gameplay.instance.StartLevel(0);
         createAsteroids();
+
+        currentShields = startShields;
     }
 
     private void Awake()
@@ -62,6 +71,11 @@ public class GameController : MonoBehaviour {
     // Update is called once per frame
     void Update() {
 
+        if (MenuController.instance.isPaused)
+        {
+            return;
+        }
+
         combotext.text = "X " + comboCount.ToString();
 
         currentScoreRate = scoreRate;
@@ -78,6 +92,12 @@ public class GameController : MonoBehaviour {
             float scoreInc = 1 * comboCountMultiplier;
             score += scoreInc;
             scoreText.text = score.ToString() + " KM";
+
+            if (score > PlayerPrefs.GetFloat("HighestScore"))
+            {
+                PlayerPrefs.SetFloat("HighestScore", score);
+            }
+            
         }
 
         comboCounter += Time.deltaTime;
@@ -95,6 +115,11 @@ public class GameController : MonoBehaviour {
         {
             comboDisplayContainer.SetActive(true);
         }
+
+
+
+
+
     }
 
     public void RestartCombo()
@@ -110,7 +135,7 @@ public class GameController : MonoBehaviour {
     public void createAsteroids()
     {
         GameObject newAsteroids = Instantiate(asteroids, transform.parent);
-        Debug.Log("Position do asteroids apwner " + AsteroidSpawner.instance.transform.position);
+        // Debug.Log("Position do asteroids apwner " + AsteroidSpawner.instance.transform.position);
         newAsteroids.transform.position = new Vector3(AsteroidSpawner.instance.transform.position.x, AsteroidSpawner.instance.transform.position.y, AsteroidSpawner.instance.transform.position.z);
 
         // TargetNumber
@@ -201,7 +226,7 @@ public class GameController : MonoBehaviour {
     }
     public Sprite getSymbol(int symbolIndex)
     {
-        Debug.Log("Symbol index " + symbolIndex);
+        // Debug.Log("Symbol index " + symbolIndex);
         return symbols[symbolIndex];
     }
 
@@ -222,8 +247,8 @@ public class GameController : MonoBehaviour {
     public int[] SeparateDigits(int digit) {
         string digitString = digit.ToString();
 
-        Debug.Log("DIGIT " + digit);
-        Debug.Log("DIGIT STRING LENGTH" + digitString.Length);
+        //Debug.Log("DIGIT " + digit);
+        //Debug.Log("DIGIT STRING LENGTH" + digitString.Length);
 
         int[] numbersArray = new int[2];
         if (digit < 10)
@@ -234,14 +259,40 @@ public class GameController : MonoBehaviour {
         {
             for (int i = 0; i < digitString.Length; i++)
             {
-                Debug.Log("ADICIONANDO " + digitString[i] + " PARA ARRAY DE RETORNO");
+                //Debug.Log("ADICIONANDO " + digitString[i] + " PARA ARRAY DE RETORNO");
                 numbersArray[i] = int.Parse(digitString[i].ToString());
             }
         }
 
-        Debug.Log("ARRAY DE RETORNO É: " + numbersArray.ToString());
+        // Debug.Log("ARRAY DE RETORNO É: " + numbersArray.ToString());
 
         return numbersArray;
+    }
+
+    public void AddShield()
+    {
+        currentShields++;
+    }
+
+    public void RequestBanner()
+    {
+        // Create a 320x50 banner at the top of the screen.
+        bannerView = new BannerView("ca-app-pub-3940256099942544/6300978111", AdSize.Banner, AdPosition.Bottom);
+
+        // Called when an ad request has successfully loaded.
+        /**bannerView.OnAdLoaded += HandleOnAdLoaded;
+        // Called when an ad request failed to load.
+        bannerView.OnAdFailedToLoad += HandleOnAdFailedToLoad;
+        // Called when an ad is clicked.
+        bannerView.OnAdOpening += HandleOnAdOpened;
+        // Called when the user returned from the app after an ad click.
+        bannerView.OnAdClosed += HandleOnAdClosed;**/
+
+        // Create an empty ad request.
+        AdRequest request = new AdRequest.Builder().Build();
+
+        // Load the banner with the request.
+        bannerView.LoadAd(request);
     }
 
 }

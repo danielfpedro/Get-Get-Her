@@ -20,8 +20,6 @@ public class TargetController : MonoBehaviour {
         }
     }
 
-    public Transform hero;
-
     // Use this for initialization
     void Start () {
 		
@@ -29,7 +27,11 @@ public class TargetController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        transform.position = new Vector3(hero.position.x, transform.position.y, transform.position.z);
+        if (GameController.instance.hero)
+        {
+            transform.position = new Vector3(GameController.instance.hero.transform.position.x, transform.position.y, transform.position.z);
+        }
+        
     }
 
     public void SetNumberSprite(Sprite numberSprite)

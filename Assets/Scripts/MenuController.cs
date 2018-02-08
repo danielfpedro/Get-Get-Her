@@ -10,10 +10,8 @@ public class MenuController : MonoBehaviour {
 
     public GameObject pauseMenu;
     public GameObject gameoverMenu;
-    public static bool isPaused = false;
+    public bool isPaused = false;
     public static bool isGameOver = false;
-
-    public Text scoreText;
 
     void Awake()
     {
@@ -29,6 +27,8 @@ public class MenuController : MonoBehaviour {
 
     public void Resume()
     {
+        AdsManager.DestroyBanner();
+
         isPaused = false;
         isGameOver = false;
 
@@ -39,6 +39,8 @@ public class MenuController : MonoBehaviour {
 
     public void Pause()
     {
+        AdsManager.RequestBanner();
+
         isPaused = true;
         pauseMenu.SetActive(true);
         Time.timeScale = 0f;
@@ -46,20 +48,21 @@ public class MenuController : MonoBehaviour {
 
     public void Restart()
     {
+        AdsManager.DestroyBanner();
         SceneManager.LoadScene("GamePlay");
     }
 
     public void Quit()
     {
+        AdsManager.DestroyBanner();
         SceneManager.LoadScene("StartScreen");
     }
     public void GameOver()
     {
         isPaused = true;
         gameoverMenu.SetActive(true);
-        Time.timeScale = 0f;
-
-        scoreText.text = GameController.instance.score.ToString();
+        AdsManager.RequestBanner();
+        //   Time.timeScale = 0f;
     }
 
 }

@@ -80,6 +80,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rightAnswear: 0
+  dropShieldOdds: 5
+  shield: {fileID: 1812087608449342, guid: 0c8203a3103d0a4439908fdceabbe97c, type: 2}
 --- !u!114 &114669601223421154
 MonoBehaviour:
   m_ObjectHideFlags: 1

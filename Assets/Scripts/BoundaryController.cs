@@ -16,9 +16,6 @@ public class BoundaryController : MonoBehaviour {
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "Asteroids")
-        {
-            Destroy(collision.gameObject);
-        }
+        Destroy(collision.gameObject);
     }
 }

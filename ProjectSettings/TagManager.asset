@@ -9,6 +9,7 @@ TagManager:
   - Number
   - MathSymbol
   - Asteroid
+  - Symbol
   layers:
   - Default
   - TransparentFX

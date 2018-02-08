@@ -43,7 +43,7 @@ public class Gameplay : MonoBehaviour {
     {
         EventManager.StopListening("HitAsteroid", hitListener);
     }
-
+    
     public void StartLevel(int currentLevelIndex)
     {
         currentLevel = levels[currentLevelIndex];
